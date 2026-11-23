@@ -1,0 +1,12 @@
+# Generated from #[derive(Settings)]. Do not edit by hand.
+name = "rule-mapper"
+version = "0.1.0"
+runs_as = "map"
+description = "Declarative JSON rule mapper for topics and payloads"
+
+[[settings]]
+key = "rules"
+type = "string"
+required = false
+default = "{\"version\":1}"
+description = "JSON rule document configuring topic rewriting and payload reshaping"

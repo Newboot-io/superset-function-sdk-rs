@@ -1,0 +1,12 @@
+# Generated from #[derive(Settings)]. Do not edit by hand.
+name = "corrosion-risk"
+version = "0.1.0"
+runs_as = "map"
+description = "Weigh corrosion readings by zone and add riskScore"
+
+[[settings]]
+key = "zoneWeights"
+type = "string"
+required = false
+default = "z1:0.5,z3:1.2"
+description = "zone:weight pairs, for example \"z1:0.5,z3:1.2\""

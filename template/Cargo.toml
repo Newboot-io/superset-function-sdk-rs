@@ -1,0 +1,18 @@
+[package]
+name = "corrosion-risk"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.85"
+license = "Apache-2.0"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+# When copying `template/` into your own standalone repository, replace the workspace
+# dependencies below with:
+#   serde_json = "1"
+#   superset-function-sdk = { git = "https://github.com/Newboot-io/superset-function-sdk-rs", tag = "v0.1.0" }
+[dependencies]
+serde_json = { workspace = true }
+superset-function-sdk = { workspace = true }

@@ -1,0 +1,68 @@
+name: push
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Version tag to push (e.g. 1.0.0)"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  push:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8
+        with:
+          toolchain: stable
+          targets: wasm32-wasip2
+      - name: Run tests and verify function.toml
+        run: cargo test --locked
+      - name: Build wasm32-wasip2 component
+        run: cargo build --release --target wasm32-wasip2 --locked
+      - name: Install ORAS
+        uses: oras-project/setup-oras@ac735097e22fe643015b0d19645f7c9a69942128 # v2.0.4
+      - name: Push artifact and print pinned digest reference
+        env:
+          REGISTRY: ${{ vars.FUNCTION_REGISTRY || 'ghcr.io' }}
+          REPOSITORY: ${{ vars.FUNCTION_REPOSITORY || github.repository }}
+          REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME || github.actor }}
+          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD || github.token }}
+          TAG: ${{ inputs.tag || github.ref_name }}
+        run: |
+          set -euo pipefail
+          if [[ ! "$TAG" =~ ^[A-Za-z0-9_][A-Za-z0-9._-]{0,127}$ ]]; then
+            echo "error: invalid OCI tag: $TAG" >&2
+            exit 1
+          fi
+          if [[ "$REGISTRY" == -* || "$REGISTRY_USERNAME" == -* ]]; then
+            echo "error: REGISTRY and REGISTRY_USERNAME must not start with '-'" >&2
+            exit 1
+          fi
+          CRATE_NAME="$(awk -F'"' '/^name[[:space:]]*=/ {print $2; exit}' Cargo.toml)"
+          WASM_FILE="target/wasm32-wasip2/release/${CRATE_NAME//-/_}.wasm"
+          test -f "$WASM_FILE"
+          REPO_LOWER="$(printf '%s' "${REGISTRY}/${REPOSITORY}" | tr '[:upper:]' '[:lower:]')"
+          oras login --username "$REGISTRY_USERNAME" --password-stdin -- "$REGISTRY" <<<"$REGISTRY_PASSWORD"
+          OUT="$(oras push --artifact-type application/vnd.newboot.function.v1 \
+            "${REPO_LOWER}:${TAG}" \
+            function.toml:application/toml \
+            "${WASM_FILE}:application/wasm")"
+          echo "$OUT"
+          DIGEST="$(printf '%s\n' "$OUT" | awk '/^Digest:/ {print $2}')"
+          test -n "$DIGEST"
+          echo "Function reference (paste into your route):"
+          echo "${REPO_LOWER}@${DIGEST}"

@@ -1,0 +1,19 @@
+# Generated from #[derive(Settings)]. Do not edit by hand.
+name = "drop-below"
+version = "0.1.0"
+runs_as = "filter"
+description = "Drop messages whose numeric value is below minValue"
+
+[[settings]]
+key = "field"
+type = "string"
+required = false
+default = "value"
+description = "JSON field holding the numeric value"
+
+[[settings]]
+key = "minValue"
+type = "number"
+required = false
+default = "0.5"
+description = "Minimum numeric value to keep (inclusive)"

@@ -1,0 +1,12 @@
+# Generated from #[derive(Settings)]. Do not edit by hand.
+name = "running-average"
+version = "0.1.0"
+runs_as = "map"
+description = "Compute a bounded sliding-window running average per variableId"
+
+[[settings]]
+key = "windowSize"
+type = "integer"
+required = false
+default = "5"
+description = "Number of recent readings averaged per variable (1..=64)"

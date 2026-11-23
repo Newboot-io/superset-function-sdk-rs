@@ -1,0 +1,33 @@
+# Generated from #[derive(Settings)]. Do not edit by hand.
+name = "uns-topic"
+version = "0.1.0"
+runs_as = "map"
+description = "Build an ISA-95 Unified Namespace topic from route settings and variableId"
+
+[[settings]]
+key = "area"
+type = "string"
+required = false
+default = "area-1"
+description = "Plant area segment"
+
+[[settings]]
+key = "enterprise"
+type = "string"
+required = false
+default = "acme"
+description = "Enterprise segment"
+
+[[settings]]
+key = "line"
+type = "string"
+required = false
+default = "line-1"
+description = "Production line segment"
+
+[[settings]]
+key = "site"
+type = "string"
+required = false
+default = "plant-1"
+description = "Plant site segment"

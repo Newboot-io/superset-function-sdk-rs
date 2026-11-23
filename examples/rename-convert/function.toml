@@ -1,0 +1,40 @@
+# Generated from #[derive(Settings)]. Do not edit by hand.
+name = "rename-convert"
+version = "0.1.0"
+runs_as = "map"
+description = "Rename a JSON field and apply a linear unit conversion"
+
+[[settings]]
+key = "decimals"
+type = "integer"
+required = false
+default = "2"
+description = "Decimal places to round to"
+
+[[settings]]
+key = "fromField"
+type = "string"
+required = false
+default = "value"
+description = "Source JSON field name to rename"
+
+[[settings]]
+key = "offset"
+type = "number"
+required = false
+default = "0.0"
+description = "Additive offset applied after scaling"
+
+[[settings]]
+key = "scale"
+type = "number"
+required = false
+default = "1.0"
+description = "Multiplicative scale factor"
+
+[[settings]]
+key = "toField"
+type = "string"
+required = false
+default = "convertedValue"
+description = "Destination JSON field name"

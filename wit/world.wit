@@ -1,0 +1,13 @@
+package newboot:function@0.1.0;
+
+world map-function {
+  import wasm-graph:processor/logger@1.1.0;
+  import wasm-graph:processor/metrics@1.1.0;
+  export wasm-graph:processor/%map@1.1.0;
+}
+
+world filter-function {
+  import wasm-graph:processor/logger@1.1.0;
+  import wasm-graph:processor/metrics@1.1.0;
+  export wasm-graph:processor/filter@1.1.0;
+}
